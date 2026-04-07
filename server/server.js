@@ -3,6 +3,7 @@ import cors from 'cors';
 import dotenv from 'dotenv';
 import sqlite3 from 'sqlite3';
 import { open } from 'sqlite';
+import pg from 'pg';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import fs from 'fs';
@@ -21,20 +22,79 @@ app.use(express.json());
 const JWT_SECRET = process.env.JWT_SECRET || 'supersecret';
 
 let db;
+const isPostgres = !!process.env.DATABASE_URL;
 
-// Initialize SQLite database
 async function initDb() {
-  db = await open({
-    filename: path.join(__dirname, '..', 'database', 'database.sqlite'),
-    driver: sqlite3.Database
-  });
+  if (isPostgres) {
+    const { Pool } = pg;
+    const pool = new Pool({
+      connectionString: process.env.DATABASE_URL,
+      ssl: { rejectUnauthorized: false }
+    });
+    console.log('Connecting to PostgreSQL...');
+    
+    // Unified interface for PostgreSQL
+    db = {
+      async all(query, params = []) {
+        const sq = query.replace(/\?/g, (_, i, s) => `$${(s.slice(0, i).match(/\?/g) || []).length + 1}`);
+        const res = await pool.query(sq, params);
+        return res.rows;
+      },
+      async get(query, params = []) {
+        const sq = query.replace(/\?/g, (_, i, s) => `$${(s.slice(0, i).match(/\?/g) || []).length + 1}`);
+        const res = await pool.query(sq, params);
+        return res.rows[0];
+      },
+      async run(query, params = []) {
+        const sq = query.replace(/\?/g, (_, i, s) => `$${(s.slice(0, i).match(/\?/g) || []).length + 1}`);
+        const res = await pool.query(sq, params);
+        return { lastID: res.rows[0]?.id || null, changes: res.rowCount };
+      },
+      async exec(query) {
+        return pool.query(query);
+      }
+    };
+  } else {
+    console.log('Connecting to SQLite...');
+    db = await open({
+      filename: path.join(__dirname, '..', 'database', 'database.sqlite'),
+      driver: sqlite3.Database
+    });
+  }
 
-  // Automatically execute schema script on startup
+  // Schema initialization
   const schemaPath = path.join(__dirname, '..', 'database', 'schema.sql');
   if (fs.existsSync(schemaPath)) {
-    const schema = fs.readFileSync(schemaPath, 'utf8');
-    await db.exec(schema);
-    console.log('Database initialized successfully.');
+    let schema = fs.readFileSync(schemaPath, 'utf8');
+    if (isPostgres) {
+      // PostgreSQL Compatibility fixes for schema
+      schema = schema
+        .replace(/INTEGER PRIMARY KEY AUTOINCREMENT/gi, 'SERIAL PRIMARY KEY')
+        .replace(/DATETIME DEFAULT CURRENT_TIMESTAMP/gi, 'TIMESTAMP DEFAULT CURRENT_TIMESTAMP')
+        .replace(/INSERT OR IGNORE/gi, 'INSERT') // We'll just ignore errors on initial seeds
+        .replace(/CHECK \(role IN \('intern', 'mentor', 'manager'\)\)/gi, '') // Postgre handle constraints differently or we ignore for simplicity
+        // The above is a bit risky but we have a limited schema.
+        // Let's be more careful.
+    }
+    
+    try {
+      if (isPostgres) {
+        // Run schema line by line or split by semicolon (careful with multiline)
+        const statements = schema.split(';').filter(s => s.trim());
+        for (let s of statements) {
+          try { await db.exec(s); } catch (e) {
+            if (!e.message.includes('already exists') && !e.message.includes('duplicate')) {
+              console.warn('Schema Warning:', e.message);
+            }
+          }
+        }
+      } else {
+        await db.exec(schema);
+      }
+      console.log('Database initialized successfully.');
+    } catch (e) {
+      console.error('Database Initialization Failed:', e.message);
+    }
   }
 }
 

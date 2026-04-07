@@ -21,12 +21,13 @@ Since SQLite is not ideal for free-tier web services (it resets on every deploy)
 2.  Connect your GitHub repository.
 3.  Set the following:
     - **Name**: `interndesk-backend`
-    - **Build Command**: `npm install` (Root: `server`)
+    - **Root Directory**: `server`
+    - **Build Command**: `npm install`
     - **Start Command**: `npm start`
 4.  Under **Advanced**, add the following **Environment Variables**:
-    - `PORT`: `10000` (Render default)
-    - `DATABASE_URL`: (Paste your Internal Database URL from Step 1)
-    - `JWT_SECRET`: (Any random string, e.g., `your-secret-key`)
+    - `PORT`: `10000`
+    - `DATABASE_URL`: (Paste your **Internal Database URL** from Step 1)
+    - `JWT_SECRET`: (Any random string)
     - `NODE_ENV`: `production`
 5.  Click **Create Web Service**.
 
@@ -38,10 +39,11 @@ Since SQLite is not ideal for free-tier web services (it resets on every deploy)
 2.  Connect your GitHub repository.
 3.  Set the following:
     - **Name**: `interndesk-frontend`
-    - **Build Command**: `npm install && npm run build` (Root: `client`)
-    - **Publish Directory**: `dist` (Root: `client`)
+    - **Root Directory**: `client`
+    - **Build Command**: `npm install && npm run build`
+    - **Publish Directory**: `dist`
 4.  Under **Advanced**, add the following **Environment Variable**:
-    - `VITE_API_BASE_URL`: (The URL of your deployed backend, e.g., `https://interndesk-backend.onrender.com`)
+    - `VITE_API_BASE_URL`: (The URL of your deployed backend)
 5.  Click **Create Static Site**.
 
 ---
