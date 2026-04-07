@@ -1,0 +1,33 @@
+/* ============================================================
+   MANAGER DASHBOARD — Specific Styles
+   ============================================================ */
+
+.manager-sidebar-theme .brand-sub   { color: #8a7acd; }
+.manager-sidebar-theme .nav-section { color: #4a3a7a; }
+.manager-sidebar-theme .nav-item    { color: #9a8fd0; }
+.manager-sidebar-theme .nav-item:hover  { color: #d8d0f0; background: rgba(255,255,255,0.04); }
+.manager-sidebar-theme .nav-item.active { color: #fff; background: rgba(109,40,217,0.18); border-left-color: #6d28d9; }
+.manager-sidebar-theme .user-role   { color: #7265b0; }
+.manager-sidebar-theme .logout-btn  { color: #9a8fd0; }
+
+.manager-main { background: #f2f4f8; }
+.manager-notif { background: #ede9fe; }
+.manager-notif:hover { background: #ddd6fe; }
+.manager-see-all { color: #6d28d9; }
+
+.manager-stats-grid { grid-template-columns: repeat(5, 1fr); }
+.manager-two-col { display: grid; grid-template-columns: 1fr 320px; gap: 1.25rem; margin-bottom: 1.25rem; }
+
+.manager-welcome { background: linear-gradient(120deg, #0a2540 0%, #2a1060 100%); }
+.manager-welcome::after  { content: ''; position: absolute; right: -20px; top: -20px; width: 200px; height: 200px; border-radius: 50%; background: rgba(109,40,217,0.18); }
+.manager-welcome::before { content: ''; position: absolute; right: 80px; bottom: -60px; width: 140px; height: 140px; border-radius: 50%; background: rgba(47,124,240,0.12); }
+.manager-welcome .welcome-text p { color: #b0a0e0; }
+.manager-welcome .w-badge-lbl { color: #a898e0; }
+
+@media (max-width: 1200px) {
+  .manager-stats-grid { grid-template-columns: repeat(3, 1fr); }
+}
+@media (max-width: 1100px) {
+  .manager-two-col { grid-template-columns: 1fr; }
+  .manager-stats-grid { grid-template-columns: repeat(2, 1fr); }
+}

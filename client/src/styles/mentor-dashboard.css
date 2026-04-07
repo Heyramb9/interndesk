@@ -1,0 +1,29 @@
+/* ============================================================
+   MENTOR DASHBOARD — Specific Styles
+   ============================================================ */
+
+.mentor-sidebar-theme .brand-sub   { color: #5cb8b0; }
+.mentor-sidebar-theme .nav-section { color: #3a6a65; }
+.mentor-sidebar-theme .nav-item    { color: #7ab5b0; }
+.mentor-sidebar-theme .nav-item:hover  { color: #c8f0ed; background: rgba(255,255,255,0.04); }
+.mentor-sidebar-theme .nav-item.active { color: #fff; background: rgba(13,148,136,0.18); border-left-color: #0d9488; }
+.mentor-sidebar-theme .user-role   { color: #4a8a82; }
+.mentor-sidebar-theme .logout-btn  { color: #7ab5b0; }
+
+.mentor-main { background: #f3f7f6; }
+.mentor-notif { background: #e0faf8; }
+.mentor-notif:hover { background: #b8f0eb; }
+.mentor-see-all { color: #0d9488; }
+
+.mentor-stats-grid { grid-template-columns: repeat(4, 1fr); }
+.mentor-two-col { display: grid; grid-template-columns: 1fr 300px; gap: 1.25rem; margin-bottom: 1.25rem; }
+
+.mentor-welcome { background: linear-gradient(120deg, #0a2540 0%, #0c4a44 100%); }
+.mentor-welcome::after { content: ''; position: absolute; right: -30px; top: -30px; width: 180px; height: 180px; border-radius: 50%; background: rgba(13,148,136,0.2); }
+.mentor-welcome .welcome-text p { color: #7dd8d0; }
+.mentor-welcome .w-badge-lbl { color: #7dd8d0; }
+
+@media (max-width: 1100px) {
+  .mentor-two-col { grid-template-columns: 1fr; }
+  .mentor-stats-grid { grid-template-columns: repeat(2, 1fr); }
+}

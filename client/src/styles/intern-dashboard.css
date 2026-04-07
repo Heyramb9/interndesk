@@ -1,0 +1,72 @@
+/* ============================================================
+   INTERN DASHBOARD — Specific Styles
+   ============================================================ */
+
+/* Sidebar theme overrides via wrapper */
+.intern-sidebar-theme .sidebar { background: #0a2540; }
+.intern-sidebar-theme .brand-sub   { color: #6b9acd; }
+.intern-sidebar-theme .nav-section { color: #3a5a7a; }
+.intern-sidebar-theme .nav-item    { color: #8dafd0; }
+.intern-sidebar-theme .nav-item:hover  { color: #c8dcf5; background: rgba(255,255,255,0.04); }
+.intern-sidebar-theme .nav-item.active { color: #fff; background: rgba(47,124,240,0.15); border-left-color: #2f7cf0; }
+.intern-sidebar-theme .user-role   { color: #5e85b0; }
+.intern-sidebar-theme .logout-btn  { color: #8dafd0; }
+
+/* Notif button */
+.intern-notif { background: #dce9fd; }
+.intern-notif:hover { background: #c7d2fe; }
+
+/* See-all accent */
+.intern-see-all { color: #2f7cf0; }
+
+/* Stats 4-col */
+.intern-stats-grid { grid-template-columns: repeat(4, 1fr); }
+
+/* Two col layout */
+.intern-two-col {
+  display: grid;
+  grid-template-columns: 1fr 340px;
+  gap: 1.25rem;
+  margin-bottom: 1.25rem;
+}
+
+/* Welcome */
+.intern-welcome {
+  background: linear-gradient(120deg, #0a2540 0%, #1a3e6a 100%);
+}
+.intern-welcome::after {
+  content: '';
+  position: absolute;
+  right: -30px; top: -30px;
+  width: 180px; height: 180px;
+  border-radius: 50%;
+  background: rgba(47,124,240,0.15);
+}
+.intern-welcome::before {
+  content: '';
+  position: absolute;
+  right: 60px; bottom: -50px;
+  width: 120px; height: 120px;
+  border-radius: 50%;
+  background: rgba(0,200,150,0.1);
+}
+.intern-welcome .welcome-text p { color: #a0c0e8; }
+.welcome-badge-solo {
+  background: rgba(47,124,240,0.25);
+  border: 1px solid rgba(47,124,240,0.4);
+  border-radius: 12px;
+  padding: 0.6rem 1.2rem;
+  text-align: center;
+  z-index: 1;
+  position: relative;
+}
+.badge-val { font-size: 1.6rem; font-weight: 700; color: #fff; }
+.badge-lbl { font-size: 0.72rem; color: #7fb4e8; margin-top: 2px; }
+
+@media (max-width: 1100px) {
+  .intern-two-col { grid-template-columns: 1fr; }
+  .intern-stats-grid { grid-template-columns: repeat(2, 1fr); }
+}
+@media (max-width: 600px) {
+  .intern-stats-grid { grid-template-columns: 1fr 1fr; }
+}
