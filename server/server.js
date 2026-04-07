@@ -70,21 +70,36 @@ async function initDb() {
       schema = schema
         .replace(/INTEGER PRIMARY KEY AUTOINCREMENT/gi, 'SERIAL PRIMARY KEY')
         .replace(/DATETIME DEFAULT CURRENT_TIMESTAMP/gi, 'TIMESTAMP DEFAULT CURRENT_TIMESTAMP')
-        .replace(/BOOLEAN DEFAULT 0/gi, 'BOOLEAN DEFAULT FALSE')
-        .replace(/BOOLEAN DEFAULT 1/gi, 'BOOLEAN DEFAULT TRUE')
-        .replace(/INSERT OR IGNORE/gi, 'INSERT')
-        .replace(/CHECK \(.+?\)/gi, ''); // PostgreSQL handle constraints differently
+        .replace(/BOOLEAN DEFAULT 0/gi, 'DEFAULT FALSE')
+        .replace(/BOOLEAN DEFAULT 1/gi, 'DEFAULT TRUE')
+        .replace(/INSERT OR IGNORE INTO/gi, 'INSERT INTO'); 
+      
+      // Specifically handle the Boolean column defaults which PG is strict about
+      schema = schema.replace(/DEFAULT 0/gi, (match, offset, fullText) => {
+        // Only replace if it looks like a boolean column (is_...)
+        const prevText = fullText.slice(Math.max(0, offset - 100), offset);
+        if (prevText.toLowerCase().includes('boolean')) return 'DEFAULT FALSE';
+        return match;
+      });
+      schema = schema.replace(/DEFAULT 1/gi, (match, offset, fullText) => {
+        const prevText = fullText.slice(Math.max(0, offset - 100), offset);
+        if (prevText.toLowerCase().includes('boolean')) return 'DEFAULT TRUE';
+        return match;
+      });
     }
     
     try {
       if (isPostgres) {
-        // Run schema line by line or split by semicolon (careful with multiline)
-        const statements = schema.split(';').filter(s => s.trim());
+        // Split by semicolon but ignore ones inside quotes (basic version)
+        const statements = schema.split(';').map(s => s.trim()).filter(s => s.length > 0);
         for (let s of statements) {
-          try { await db.exec(s); } catch (e) {
-            if (!e.message.includes('already exists') && !e.message.includes('duplicate')) {
-              console.warn('Schema Warning:', e.message);
-            }
+          try { 
+            await db.exec(s); 
+          } catch (e) {
+            // Ignore existance errors
+            const msg = e.message.toLowerCase();
+            if (msg.includes('already exists') || msg.includes('duplicate')) continue;
+            console.warn('Schema Warning:', e.message);
           }
         }
       } else {
