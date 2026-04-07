@@ -89,6 +89,12 @@ async function initDb() {
             console.warn('Schema Warning:', e.message);
           }
         }
+        
+        // Sync sequences after manual ID inserts for PostgreSQL
+        const tables = ['users', 'cohorts', 'intern_profiles', 'mentor_profiles', 'tasks', 'schedule_events', 'announcements', 'messages', 'skill_progress', 'reviews', 'notifications', 'journals', 'goals', 'resources'];
+        for (let t of tables) {
+          try { await db.exec(`SELECT setval(pg_get_serial_sequence('${t}', 'id'), coalesce((SELECT MAX(id) FROM ${t}), 0) + 1, false)`); } catch (e) {}
+        }
       } else {
         await db.exec(schema);
       }
