@@ -70,10 +70,10 @@ async function initDb() {
       schema = schema
         .replace(/INTEGER PRIMARY KEY AUTOINCREMENT/gi, 'SERIAL PRIMARY KEY')
         .replace(/DATETIME DEFAULT CURRENT_TIMESTAMP/gi, 'TIMESTAMP DEFAULT CURRENT_TIMESTAMP')
-        .replace(/INSERT OR IGNORE/gi, 'INSERT') // We'll just ignore errors on initial seeds
-        .replace(/CHECK \(role IN \('intern', 'mentor', 'manager'\)\)/gi, '') // Postgre handle constraints differently or we ignore for simplicity
-        // The above is a bit risky but we have a limited schema.
-        // Let's be more careful.
+        .replace(/BOOLEAN DEFAULT 0/gi, 'BOOLEAN DEFAULT FALSE')
+        .replace(/BOOLEAN DEFAULT 1/gi, 'BOOLEAN DEFAULT TRUE')
+        .replace(/INSERT OR IGNORE/gi, 'INSERT')
+        .replace(/CHECK \(.+?\)/gi, ''); // PostgreSQL handle constraints differently
     }
     
     try {
