@@ -1,8 +1,6 @@
 import express from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
-import sqlite3 from 'sqlite3';
-import { open } from 'sqlite';
 import pg from 'pg';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
@@ -33,7 +31,6 @@ async function initDb() {
     });
     console.log('Connecting to PostgreSQL...');
     
-    // Unified interface for PostgreSQL
     db = {
       async all(query, params = []) {
         const sq = query.replace(/\?/g, (_, i, s) => `$${(s.slice(0, i).match(/\?/g) || []).length + 1}`);
@@ -56,9 +53,11 @@ async function initDb() {
     };
   } else {
     console.log('Connecting to SQLite...');
+    const { open } = await import('sqlite');
+    const sqlite3 = await import('sqlite3');
     db = await open({
       filename: path.join(__dirname, '..', 'database', 'database.sqlite'),
-      driver: sqlite3.Database
+      driver: sqlite3.default.Database
     });
   }
 
