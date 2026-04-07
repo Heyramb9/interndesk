@@ -20,7 +20,7 @@ export default function MessagesPanel() {
   const [loading, setLoading] = useState(false);
 
   const fetchMessages = async () => {
-    const token = localStorage.getItem('token');
+    const token = localStorage.getItem('interndesk_token');
     try {
       const inboxRes = await fetch(`${API_URL}/api/messages/inbox`, { headers: { Authorization: `Bearer ${token}` } });
       const inboxData = await inboxRes.json();
@@ -33,7 +33,7 @@ export default function MessagesPanel() {
   };
 
   const fetchUsers = async () => {
-    const token = localStorage.getItem('token');
+    const token = localStorage.getItem('interndesk_token');
     try {
       const res = await fetch(`${API_URL}/api/users`, { headers: { Authorization: `Bearer ${token}` } });
       const data = await res.json();
@@ -51,7 +51,7 @@ export default function MessagesPanel() {
   const handleSend = async () => {
     if (!composeTo || !composeBody) return toast('Please select recipient and write a message', 'error');
     setLoading(true);
-    const token = localStorage.getItem('token');
+    const token = localStorage.getItem('interndesk_token');
     try {
       const res = await fetch(`${API_URL}/api/messages/send`, {
         method: 'POST', headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },

@@ -34,7 +34,7 @@ export default function GenericDataPanel({ title, table, columns, roleFilter }: 
   const fetchData = async () => {
     setLoading(true);
     try {
-      const res = await fetch(`${API_URL}/api/data/${table}${filterQuery}`, { headers: { Authorization: `Bearer ${localStorage.getItem('token')}` } });
+      const res = await fetch(`${API_URL}/api/data/${table}${filterQuery}`, { headers: { Authorization: `Bearer ${localStorage.getItem('interndesk_token')}` } });
       const js = await res.json();
       if (js.success) setData(js.data);
     } catch(err) {
@@ -56,7 +56,7 @@ export default function GenericDataPanel({ title, table, columns, roleFilter }: 
       }
       
       const res = await fetch(`${API_URL}/api/data/${table}`, {
-        method: 'POST', headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${localStorage.getItem('token')}` },
+        method: 'POST', headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${localStorage.getItem('interndesk_token')}` },
         body: JSON.stringify(payload)
       });
       const js = await res.json();
@@ -74,7 +74,7 @@ export default function GenericDataPanel({ title, table, columns, roleFilter }: 
   const handleToggleDone = async (item: any, doneField: string) => {
     try {
       await fetch(`${API_URL}/api/data/${table}/${item.id}`, {
-        method: 'PUT', headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${localStorage.getItem('token')}` },
+        method: 'PUT', headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${localStorage.getItem('interndesk_token')}` },
         body: JSON.stringify({ [doneField]: item[doneField] ? 0 : 1 })
       });
       fetchData();
@@ -85,7 +85,7 @@ export default function GenericDataPanel({ title, table, columns, roleFilter }: 
     if (!confirm('Are you sure you want to delete this?')) return;
     try {
       await fetch(`${API_URL}/api/data/${table}/${id}`, {
-        method: 'DELETE', headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
+        method: 'DELETE', headers: { Authorization: `Bearer ${localStorage.getItem('interndesk_token')}` }
       });
       toast('Deleted', 'success');
       fetchData();
