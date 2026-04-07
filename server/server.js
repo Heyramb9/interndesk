@@ -70,22 +70,9 @@ async function initDb() {
       schema = schema
         .replace(/INTEGER PRIMARY KEY AUTOINCREMENT/gi, 'SERIAL PRIMARY KEY')
         .replace(/DATETIME DEFAULT CURRENT_TIMESTAMP/gi, 'TIMESTAMP DEFAULT CURRENT_TIMESTAMP')
-        .replace(/BOOLEAN DEFAULT 0/gi, 'DEFAULT FALSE')
-        .replace(/BOOLEAN DEFAULT 1/gi, 'DEFAULT TRUE')
-        .replace(/INSERT OR IGNORE INTO/gi, 'INSERT INTO'); 
-      
-      // Specifically handle the Boolean column defaults which PG is strict about
-      schema = schema.replace(/DEFAULT 0/gi, (match, offset, fullText) => {
-        // Only replace if it looks like a boolean column (is_...)
-        const prevText = fullText.slice(Math.max(0, offset - 100), offset);
-        if (prevText.toLowerCase().includes('boolean')) return 'DEFAULT FALSE';
-        return match;
-      });
-      schema = schema.replace(/DEFAULT 1/gi, (match, offset, fullText) => {
-        const prevText = fullText.slice(Math.max(0, offset - 100), offset);
-        if (prevText.toLowerCase().includes('boolean')) return 'DEFAULT TRUE';
-        return match;
-      });
+        .replace(/BOOLEAN DEFAULT 0/gi, 'BOOLEAN DEFAULT FALSE')
+        .replace(/BOOLEAN DEFAULT 1/gi, 'BOOLEAN DEFAULT TRUE')
+        .replace(/INSERT OR IGNORE INTO/gi, 'INSERT INTO');
     }
     
     try {
