@@ -11,11 +11,11 @@ export default function LandingPage() {
           <span className="logo-sub">&nbsp;by interns, for interns</span>
         </div>
         <ul className="nav-links">
-          <li><a href="#">Home</a></li>
+          <li><Link to="/">Home</Link></li>
           <li><a href="#how-it-works">How it works</a></li>
           <li><a href="#roles">Roles</a></li>
           <li><a href="#about-us">About us</a></li>
-          <li><a href="#">Contact</a></li>
+          <li><a href="mailto:heyramb.nm.559@gmail.com">Contact</a></li>
           <li><Link to="/login" className="nav-cta">Get Started →</Link></li>
         </ul>
       </nav>

@@ -40,10 +40,6 @@ export default function LoginPage() {
           </div>
           <nav className="auth-header-nav">
             <Link to="/" className="auth-nav-link">Home</Link>
-            <span className="auth-nav-sep">|</span>
-            <a href="#" className="auth-nav-link">About us</a>
-            <span className="auth-nav-sep">|</span>
-            <a href="#" className="auth-nav-link">Contact us</a>
           </nav>
         </header>
 

@@ -56,10 +56,6 @@ export default function RegisterPage() {
           </div>
           <nav className="auth-header-nav">
             <Link to="/" className="auth-nav-link">Home</Link>
-            <span className="auth-nav-sep">|</span>
-            <a href="#" className="auth-nav-link">About us</a>
-            <span className="auth-nav-sep">|</span>
-            <a href="#" className="auth-nav-link">Contact us</a>
           </nav>
           <div className="auth-header-roles">
             <span className="role-item">Intern</span>
