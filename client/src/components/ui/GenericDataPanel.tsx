@@ -105,7 +105,7 @@ export default function GenericDataPanel({ title, table, columns, roleFilter }: 
           <table className="people-table" style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left' }}>
             <thead style={{ position: 'sticky', top: 0, background: '#f8fafc', zIndex: 10 }}>
               <tr>
-                {displayCols.map(c => <th key={c.key} style={{ padding: '0.75rem', color: '#64748b' }}>{c.label}</th>)}
+                {displayCols.map(c => <th key={c.key} style={{ padding: '0.75rem', color: 'var(--muted)' }}>{c.label}</th>)}
                 <th style={{ padding: '0.75rem', textAlign: 'right' }}>Actions</th>
               </tr>
             </thead>
