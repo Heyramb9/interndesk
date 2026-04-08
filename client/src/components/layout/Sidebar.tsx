@@ -30,7 +30,7 @@ export default function Sidebar({
   onLogout
 }: SidebarProps) {
   return (
-    <aside className={`sidebar ${accentClass}-sidebar`} style={{ width: '250px', height: '100vh', display: 'flex', flexDirection: 'column', borderRight: '1px solid #eaeaea', backgroundColor: '#fff' }}>
+    <aside className={`sidebar ${accentClass}-sidebar`} style={{ width: '250px', height: '100vh', display: 'flex', flexDirection: 'column', borderRight: '1px solid #eaeaea', backgroundColor: '#fff', color: '#334155' }}>
       <div className="brand" style={{ padding: '1.5rem', borderBottom: '1px solid #eaeaea' }}>
         <h2 style={{ margin: 0, fontSize: '1.5rem', color: 'var(--navy, #0f172a)' }}>Intern Desk</h2>
         <div style={{ fontSize: '0.85rem', color: '#64748b', marginTop: '0.25rem' }}>{brandSub}</div>

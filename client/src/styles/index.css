@@ -22,15 +22,15 @@ html { scroll-behavior: smooth; }
   --blue-light: #a0c0ff;
   --cream: #f9f6f1;
   --off-white: #f3f5fc;
-  --text-muted: #546e8a;
-  --border: #e1e8f0;
+  --text-muted: #334e6d;
+  --border: #e2e8f0;
   --green: #10b981;
   --red: #ef4444;
   --amber: #f59e0b;
   --teal: #0d9488;
   --violet: #6d28d9;
-  --muted: #647b9b;
-  --bg: #f5f8fc;
+  --muted: #475569;
+  --bg: #f8fafc;
   --font: 'DM Sans', 'Inter', sans-serif;
   --radius-md: 12px;
   --radius-lg: 20px;
@@ -639,10 +639,10 @@ button { font-family: inherit; cursor: pointer; }
 .people-table th {
   font-size: 0.72rem;
   font-weight: 600;
-  color: var(--muted);
+  color: #475569;
   text-transform: uppercase;
-  letter-spacing: 0.04em;
-  padding: 0 0 0.6rem;
+  letter-spacing: 0.05em;
+  padding: 0.75rem 0.6rem;
   text-align: left;
   border-bottom: 1px solid var(--border);
 }

@@ -4,13 +4,13 @@
 
 /* Sidebar theme overrides via wrapper */
 .intern-sidebar-theme .sidebar { background: #0a2540; }
-.intern-sidebar-theme .brand-sub   { color: #6b9acd; }
-.intern-sidebar-theme .nav-section { color: #3a5a7a; }
-.intern-sidebar-theme .nav-item    { color: #8dafd0; }
-.intern-sidebar-theme .nav-item:hover  { color: #c8dcf5; background: rgba(255,255,255,0.04); }
-.intern-sidebar-theme .nav-item.active { color: #fff; background: rgba(47,124,240,0.15); border-left-color: #2f7cf0; }
-.intern-sidebar-theme .user-role   { color: #5e85b0; }
-.intern-sidebar-theme .logout-btn  { color: #8dafd0; }
+.intern-sidebar-theme .brand-sub   { color: #2f7cf0; }
+.intern-sidebar-theme .nav-section { color: #1e3a5a; font-weight: 700; }
+.intern-sidebar-theme .nav-item    { color: #4b5563; }
+.intern-sidebar-theme .nav-item:hover  { color: #2f7cf0; background: #f0f7ff; }
+.intern-sidebar-theme .nav-item.active { color: #2f7cf0; background: #e0eaff; border-left-color: #2f7cf0; font-weight: 700; }
+.intern-sidebar-theme .user-role   { color: #2f7cf0; }
+.intern-sidebar-theme .logout-btn  { color: #4b5563; }
 
 /* Notif button */
 .intern-notif { background: #dce9fd; }

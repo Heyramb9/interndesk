@@ -2,13 +2,13 @@
    MENTOR DASHBOARD — Specific Styles
    ============================================================ */
 
-.mentor-sidebar-theme .brand-sub   { color: #5cb8b0; }
-.mentor-sidebar-theme .nav-section { color: #3a6a65; }
-.mentor-sidebar-theme .nav-item    { color: #7ab5b0; }
-.mentor-sidebar-theme .nav-item:hover  { color: #c8f0ed; background: rgba(255,255,255,0.04); }
-.mentor-sidebar-theme .nav-item.active { color: #fff; background: rgba(13,148,136,0.18); border-left-color: #0d9488; }
-.mentor-sidebar-theme .user-role   { color: #4a8a82; }
-.mentor-sidebar-theme .logout-btn  { color: #7ab5b0; }
+.mentor-sidebar-theme .brand-sub   { color: #0d9488; }
+.mentor-sidebar-theme .nav-section { color: #0f4a44; font-weight: 700; }
+.mentor-sidebar-theme .nav-item    { color: #4b5563; }
+.mentor-sidebar-theme .nav-item:hover  { color: #0d9488; background: #f0fdfa; }
+.mentor-sidebar-theme .nav-item.active { color: #0d9488; background: #ccfbf1; border-left-color: #0d9488; font-weight: 700; }
+.mentor-sidebar-theme .user-role   { color: #0d9488; }
+.mentor-sidebar-theme .logout-btn  { color: #4b5563; }
 
 .mentor-main { background: #f3f7f6; }
 .mentor-notif { background: #e0faf8; }

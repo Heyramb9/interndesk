@@ -2,13 +2,13 @@
    MANAGER DASHBOARD — Specific Styles
    ============================================================ */
 
-.manager-sidebar-theme .brand-sub   { color: #8a7acd; }
-.manager-sidebar-theme .nav-section { color: #4a3a7a; }
-.manager-sidebar-theme .nav-item    { color: #9a8fd0; }
-.manager-sidebar-theme .nav-item:hover  { color: #d8d0f0; background: rgba(255,255,255,0.04); }
-.manager-sidebar-theme .nav-item.active { color: #fff; background: rgba(109,40,217,0.18); border-left-color: #6d28d9; }
-.manager-sidebar-theme .user-role   { color: #7265b0; }
-.manager-sidebar-theme .logout-btn  { color: #9a8fd0; }
+.manager-sidebar-theme .brand-sub   { color: #6d28d9; }
+.manager-sidebar-theme .nav-section { color: #4a3a7a; font-weight: 700; }
+.manager-sidebar-theme .nav-item    { color: #4b5563; }
+.manager-sidebar-theme .nav-item:hover  { color: #6d28d9; background: #f5f3ff; }
+.manager-sidebar-theme .nav-item.active { color: #6d28d9; background: #ede9fe; border-left-color: #6d28d9; font-weight: 700; }
+.manager-sidebar-theme .user-role   { color: #6d28d9; }
+.manager-sidebar-theme .logout-btn  { color: #4b5563; }
 
 .manager-main { background: #f2f4f8; }
 .manager-notif { background: #ede9fe; }
