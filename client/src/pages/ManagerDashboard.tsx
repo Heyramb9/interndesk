@@ -91,7 +91,6 @@ export default function ManagerDashboard() {
     loadData()
   }, [API_URL])
 
-  const [addOpen, setAddOpen] = useState(false)
   const [detailOpen, setDetailOpen] = useState(false)
   const [msgOpen, setMsgOpen] = useState(false)
   const [annOpen, setAnnOpen] = useState(false)
@@ -170,63 +169,8 @@ export default function ManagerDashboard() {
     }
   }
 
-  // Add User Form
-  const [newRole, setNewRole] = useState('intern')
-  const [newFirst, setNewFirst] = useState('')
-  const [newLast, setNewLast] = useState('')
-  const [newEmail, setNewEmail] = useState('')
-  const [newPassword, setNewPassword] = useState('')
-  const [newAttribute, setNewAttribute] = useState('Frontend Dev')
 
-  const [msgTo, setMsgTo] = useState('')
-  const [msgSubj, setMsgSubj] = useState('')
-  const [msgBody, setMsgBody] = useState('')
 
-  const [annTitle, setAnnTitle] = useState('')
-  const [annBody, setAnnBody] = useState('')
-  const [annAudience, setAnnAudience] = useState('all')
-
-  const handleLogout = () => { logout(); navigate('/login') }
-  const today = new Date().toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })
-
-  const addUser = async () => {
-    if (!newFirst.trim() || !newLast.trim() || !newEmail.trim() || !newPassword.trim()) return toast('Please fill all fields', 'error')
-    
-    try {
-      const payload = {
-        firstName: newFirst, lastName: newLast, email: newEmail, password: newPassword, role: newRole,
-        [newRole === 'intern' ? 'track' : 'title']: newAttribute
-      }
-      const res = await fetch(`${API_URL}/api/auth/register`, {
-        method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload)
-      })
-      const data = await res.json()
-      if (data.success) {
-        toast(`Successfully added ${newFirst} as ${newRole}!`, 'success')
-        setAddOpen(false)
-        setNewFirst(''); setNewLast(''); setNewEmail(''); setNewPassword('')
-        
-        // Refresh users
-        const listRes = await fetch(`${API_URL}/api/users?role=${newRole}`, { headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` } })
-        const listData = await listRes.json()
-        if (listData.success) {
-          if (newRole === 'intern') setInterns(listData.users)
-          if (newRole === 'mentor') setMentors(listData.users)
-        }
-      } else {
-        toast(data.message, 'error')
-      }
-    } catch (err) {
-      toast('Network error during user creation', 'error')
-    }
-  }
-
-  const removeIntern = () => {
-    if (!selectedIntern) return
-    setInterns(prev => prev.filter(i => i.id !== selectedIntern.id))
-    setDetailOpen(false)
-    toast(`${selectedIntern.name} removed`, 'warning')
-  }
 
   const dismissAlert = (id: number) => setAlerts(prev => prev.filter(a => a !== id))
   const dismissAll = () => { setAlerts([]); toast('All alerts dismissed', 'success') }
@@ -566,36 +510,6 @@ export default function ManagerDashboard() {
 
       <ToastContainer messages={toasts} onRemove={remove} />
 
-      {/* MODAL: Add User */}
-      <Modal open={addOpen} onClose={() => setAddOpen(false)} title="➕ Add New User"
-        footer={<><button className="btn btn-ghost" onClick={() => setAddOpen(false)}>Cancel</button><button className="btn btn-violet" onClick={addUser}>Add User</button></>}
-      >
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.75rem' }}>
-          <div className="form-group"><label className="form-label">Role</label>
-            <select className="form-select" value={newRole} onChange={e => { setNewRole(e.target.value); setNewAttribute(e.target.value === 'intern' ? 'Frontend Dev' : 'Mentor'); }}>
-              <option value="intern">Intern</option>
-              <option value="mentor">Mentor</option>
-            </select>
-          </div>
-          <div className="form-group"><label className="form-label">Email</label><input className="form-input" type="email" placeholder="user@example.com" value={newEmail} onChange={e => setNewEmail(e.target.value)} /></div>
-        </div>
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.75rem' }}>
-          <div className="form-group"><label className="form-label">First Name</label><input className="form-input" type="text" placeholder="Jane" value={newFirst} onChange={e => setNewFirst(e.target.value)} /></div>
-          <div className="form-group"><label className="form-label">Last Name</label><input className="form-input" type="text" placeholder="Smith" value={newLast} onChange={e => setNewLast(e.target.value)} /></div>
-        </div>
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.75rem' }}>
-          <div className="form-group"><label className="form-label">Password</label><input className="form-input" type="password" placeholder="Temporary password" value={newPassword} onChange={e => setNewPassword(e.target.value)} /></div>
-          {newRole === 'intern' ? (
-            <div className="form-group"><label className="form-label">Track</label>
-              <select className="form-select" value={newAttribute} onChange={e => setNewAttribute(e.target.value)}>
-                <option>Frontend Dev</option><option>Data Science</option><option>Backend Dev</option><option>UX Design</option>
-              </select>
-            </div>
-          ) : (
-            <div className="form-group"><label className="form-label">Title</label><input className="form-input" type="text" placeholder="e.g. Senior SWE" value={newAttribute} onChange={e => setNewAttribute(e.target.value)} /></div>
-          )}
-        </div>
-      </Modal>
 
       {/* MODAL: Intern Detail */}
       <Modal open={detailOpen} onClose={() => setDetailOpen(false)} title={selectedIntern ? `👤 ${selectedIntern.name}` : 'Intern Profile'} maxWidth="520px"
