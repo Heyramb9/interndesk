@@ -91,7 +91,7 @@ async function initDb() {
         }
         
         // Sync sequences after manual ID inserts for PostgreSQL
-        const tables = ['users', 'cohorts', 'intern_profiles', 'mentor_profiles', 'tasks', 'schedule_events', 'announcements', 'messages', 'skill_progress', 'reviews', 'notifications', 'journals', 'goals', 'resources'];
+        const tables = ['users', 'cohorts', 'intern_profiles', 'mentor_profiles', 'tasks', 'schedule_events', 'announcements', 'messages', 'skill_progress', 'reviews', 'notifications', 'journals', 'goals', 'resources', 'past_interns'];
         for (let t of tables) {
           try { await db.exec(`SELECT setval(pg_get_serial_sequence('${t}', 'id'), coalesce((SELECT MAX(id) FROM ${t}), 0) + 1, false)`); } catch (e) {}
         }
@@ -213,6 +213,33 @@ app.get('/api/users', verifyToken, async (req, res) => {
     }
     res.json({ success: true, users });
   } catch (error) {
+    res.status(500).json({ success: false, message: error.message });
+  }
+});
+
+// Deactivate Intern API
+app.post('/api/users/deactivate/:id', verifyToken, async (req, res) => {
+  try {
+    const { id } = req.params;
+    if (req.user.role !== 'manager') return res.status(403).json({ success: false, message: 'Only managers can deactivate interns' });
+
+    const user = await db.get('SELECT * FROM users WHERE id = ?', [id]);
+    if (!user) return res.status(404).json({ success: false, message: 'User not found' });
+    if (user.role !== 'intern') return res.status(400).json({ success: false, message: 'Only interns can be moved to past interns' });
+
+    const profile = await db.get('SELECT track FROM intern_profiles WHERE user_id = ?', [id]);
+    
+    await db.run(
+      'INSERT INTO past_interns (first_name, last_name, email, track) VALUES (?, ?, ?, ?)',
+      [user.first_name, user.last_name, user.email, profile?.track || 'Unassigned']
+    );
+
+    // Delete user (cascades to profiles and other related data usually, but let's be safe if no CASCADE is set on some tables)
+    await db.run('DELETE FROM users WHERE id = ?', [id]);
+
+    res.json({ success: true, message: 'Intern deactivated and moved to archive' });
+  } catch (error) {
+    console.error(error);
     res.status(500).json({ success: false, message: error.message });
   }
 });

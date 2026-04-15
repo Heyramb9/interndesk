@@ -279,7 +279,7 @@ export default function MentorDashboard() {
           ) : activePage === 'messages' ? (
             <MessagesPanel />
           ) : activePage === 'interns' ? (
-            <GenericDataPanel title="My Assigned Interns" table="intern_profiles" roleFilter={true} columns={[{key: 'track', label: 'Track', type: 'text'}, {key: 'status', label: 'Status', type: 'select', options: ['on-track', 'at-risk', 'ahead']}, {key: 'progress', label: 'Progress (%)', type: 'text'}]} />
+            <GenericDataPanel title="My Assigned Interns" table="intern_profiles" roleFilter={true} hideAdd={true} columns={[{key: 'track', label: 'Track', type: 'text'}, {key: 'status', label: 'Status', type: 'select', options: ['on-track', 'at-risk', 'ahead']}, {key: 'progress', label: 'Progress (%)', type: 'text'}]} />
           ) : activePage === 'schedule' ? (
             <GenericDataPanel title="Schedule" table="schedule_events" roleFilter={true} columns={[{key: 'title', label: 'Title', type: 'text'}, {key: 'event_date', label: 'Date', type: 'date'}, {key: 'event_time', label: 'Time', type: 'time'}, {key: 'description', label: 'Details', type: 'textarea'}]} />
           ) : activePage === 'resources' ? (

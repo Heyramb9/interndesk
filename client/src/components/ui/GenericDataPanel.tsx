@@ -16,10 +16,16 @@ interface GenericDataPanelProps {
   title: string;
   table: string;
   columns: Column[];
-  roleFilter?: boolean; // automatically attach ?intern_id= user.id or ?user_id= user.id
+  roleFilter?: boolean; 
+  hideAdd?: boolean;
+  customAction?: {
+    label: string;
+    onClick: (id: number) => void;
+    color?: string;
+  };
 }
 
-export default function GenericDataPanel({ title, table, columns, roleFilter }: GenericDataPanelProps) {
+export default function GenericDataPanel({ title, table, columns, roleFilter, hideAdd, customAction }: GenericDataPanelProps) {
   const { user } = useAuth();
   const { toast } = useToast();
   const API_URL = API_BASE_URL;
@@ -34,7 +40,7 @@ export default function GenericDataPanel({ title, table, columns, roleFilter }: 
   const fetchData = async () => {
     setLoading(true);
     try {
-      const res = await fetch(`${API_URL}/api/data/${table}${filterQuery}`, { headers: { Authorization: `Bearer ${localStorage.getItem('interndesk_token')}` } });
+      const res = await fetch(`${API_URL}/api/data/${table}${filterQuery}`, { headers: { Authorization: `Bearer ${localStorage.getItem('token')}` } });
       const js = await res.json();
       if (js.success) setData(js.data);
     } catch(err) {
@@ -56,7 +62,7 @@ export default function GenericDataPanel({ title, table, columns, roleFilter }: 
       }
       
       const res = await fetch(`${API_URL}/api/data/${table}`, {
-        method: 'POST', headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${localStorage.getItem('interndesk_token')}` },
+        method: 'POST', headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${localStorage.getItem('token')}` },
         body: JSON.stringify(payload)
       });
       const js = await res.json();
@@ -74,7 +80,7 @@ export default function GenericDataPanel({ title, table, columns, roleFilter }: 
   const handleToggleDone = async (item: any, doneField: string) => {
     try {
       await fetch(`${API_URL}/api/data/${table}/${item.id}`, {
-        method: 'PUT', headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${localStorage.getItem('interndesk_token')}` },
+        method: 'PUT', headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${localStorage.getItem('token')}` },
         body: JSON.stringify({ [doneField]: item[doneField] ? 0 : 1 })
       });
       fetchData();
@@ -85,7 +91,7 @@ export default function GenericDataPanel({ title, table, columns, roleFilter }: 
     if (!confirm('Are you sure you want to delete this?')) return;
     try {
       await fetch(`${API_URL}/api/data/${table}/${id}`, {
-        method: 'DELETE', headers: { Authorization: `Bearer ${localStorage.getItem('interndesk_token')}` }
+        method: 'DELETE', headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
       });
       toast('Deleted', 'success');
       fetchData();
@@ -98,7 +104,9 @@ export default function GenericDataPanel({ title, table, columns, roleFilter }: 
     <div className="card" style={{ height: 'calc(100vh - 120px)', display: 'flex', flexDirection: 'column' }}>
       <div className="card-head" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
         <h3 style={{ margin: 0 }}>{title}</h3>
-        <button className="btn btn-violet" onClick={() => { setFormData({}); setAddOpen(true); }}>+ Add New</button>
+        {!hideAdd && (
+          <button className="btn btn-violet" onClick={() => { setFormData({}); setAddOpen(true); }}>+ Add New</button>
+        )}
       </div>
       <div className="card-body" style={{ flex: 1, overflowY: 'auto', padding: '1rem' }}>
         {loading ? <p style={{ color: 'var(--muted)' }}>Loading...</p> : data.length === 0 ? <p style={{ color: 'var(--muted)', textAlign: 'center', marginTop: '2rem' }}>No {title.toLowerCase()} recorded yet.</p> : (
@@ -120,7 +128,17 @@ export default function GenericDataPanel({ title, table, columns, roleFilter }: 
                     </td>
                   ))}
                   <td style={{ padding: '0.75rem', textAlign: 'right' }}>
-                    <button className="btn btn-ghost btn-sm" onClick={() => handleDelete(row.id)} style={{ color: '#ef4444' }}>Delete</button>
+                    {customAction ? (
+                      <button 
+                        className="btn btn-ghost btn-sm" 
+                        onClick={() => customAction.onClick(row.id)} 
+                        style={{ color: customAction.color || '#ef4444' }}
+                      >
+                        {customAction.label}
+                      </button>
+                    ) : (
+                      <button className="btn btn-ghost btn-sm" onClick={() => handleDelete(row.id)} style={{ color: '#ef4444' }}>Delete</button>
+                    )}
                   </td>
                 </tr>
               ))}

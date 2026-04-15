@@ -34,7 +34,6 @@ const NAV_SECTIONS = [
       { page: 'interns', icon: '🎓', label: 'Interns', badge: 24 },
       { page: 'mentors', icon: '🧑‍🏫', label: 'Mentors' },
       { page: 'cohorts', icon: '👥', label: 'Cohorts' },
-      { page: 'add-user', icon: '➕', label: 'Add Users' },
     ]
   },
   {
@@ -109,6 +108,30 @@ export default function ManagerDashboard() {
   const [dbColumns, setDbColumns] = useState<string[]>([])
   const [dbError, setDbError] = useState('')
   const [dbLoading, setDbLoading] = useState(false)
+
+  const [showPastInterns, setShowPastInterns] = useState(false)
+
+  const handleDeactivateIntern = async (id: number) => {
+    if (!confirm('Are you sure you want to deactivate this intern? They will be moved to past interns archive.')) return;
+    try {
+      const res = await fetch(`${API_URL}/api/users/deactivate/${id}`, {
+        method: 'POST',
+        headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
+      });
+      const data = await res.json();
+      if (data.success) {
+        toast('Intern deactivated', 'success');
+        // Refresh intern lists
+        const iRes = await fetch(`${API_URL}/api/users?role=intern`, { headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` } })
+        const iData = await iRes.json()
+        if (iData.success) setInterns(iData.users)
+      } else {
+        toast(data.message, 'error');
+      }
+    } catch (err) {
+      toast('Error deactivating intern', 'error');
+    }
+  }
 
   useEffect(() => {
     if (activePage === 'database') {
@@ -234,7 +257,6 @@ export default function ManagerDashboard() {
           <div className="page-title">{activePage.charAt(0).toUpperCase() + activePage.slice(1)}</div>
           <div className="topbar-right">
             <div className="date-chip">☀️ {today}</div>
-            <button className="add-btn" onClick={() => setAddOpen(true)}>+ Add Intern</button>
             <button className="notif-btn manager-notif" onClick={() => { setNotifOpen(true); setHasNotif(false) }}>
               🔔{hasNotif && <span className="notif-dot" />}
             </button>
@@ -297,8 +319,60 @@ export default function ManagerDashboard() {
             <GenericDataPanel title="Announcements" table="announcements" roleFilter={true} columns={[{key: 'title', label: 'Announcement', type: 'text'}, {key: 'body', label: 'Message', type: 'textarea'}, {key: 'audience', label: 'Audience', type: 'select', options: ['all', 'interns', 'mentors']}]} />
           ) : activePage === 'messages' ? (
             <MessagesPanel />
-          ) : activePage === 'interns' || activePage === 'mentors' || activePage === 'add-user' ? (
-            <GenericDataPanel title="System Users" table="users" columns={[{key: 'first_name', label: 'First Name', type: 'text'}, {key: 'last_name', label: 'Last Name', type: 'text'}, {key: 'email', label: 'Email', type: 'text'}, {key: 'role', label: 'Role', type: 'select', options: ['manager', 'mentor', 'intern']}]} />
+          ) : activePage === 'interns' ? (
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+              <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
+                <button className="btn btn-violet" onClick={() => setShowPastInterns(!showPastInterns)}>
+                  {showPastInterns ? 'View Active Interns' : 'View Past Interns'}
+                </button>
+              </div>
+              {showPastInterns ? (
+                <GenericDataPanel 
+                  title="Archive: Past Interns" 
+                  table="past_interns" 
+                  hideAdd={true}
+                  columns={[
+                    {key: 'first_name', label: 'First Name', type: 'text'}, 
+                    {key: 'last_name', label: 'Last Name', type: 'text'}, 
+                    {key: 'email', label: 'Email', type: 'text'},
+                    {key: 'track', label: 'Track', type: 'text'},
+                    {key: 'deactivated_at', label: 'Date Deactivated', type: 'text'}
+                  ]} 
+                />
+              ) : (
+                <GenericDataPanel 
+                  title="System Users: Interns" 
+                  table="users" 
+                  hideAdd={true}
+                  roleFilter={false} // The backend /api/users handles role filters better for this view
+                  customAction={{
+                    label: 'Deactivate',
+                    onClick: handleDeactivateIntern,
+                    color: '#ef4444'
+                  }}
+                  columns={[
+                    {key: 'first_name', label: 'First Name', type: 'text'}, 
+                    {key: 'last_name', label: 'Last Name', type: 'text'}, 
+                    {key: 'email', label: 'Email', type: 'text'}
+                  ]} 
+                />
+              )}
+            </div>
+          ) : activePage === 'mentors' ? (
+            <GenericDataPanel 
+              title="System Users: Mentors" 
+              table="users" 
+              hideAdd={true}
+              columns={[
+                {key: 'first_name', label: 'First Name', type: 'text'}, 
+                {key: 'last_name', label: 'Last Name', type: 'text'}, 
+                {key: 'email', label: 'Email', type: 'text'}
+              ]} 
+            />
+          ) : activePage === 'add-user' ? (
+            <div style={{ padding: '2rem', textAlign: 'center', color: 'var(--muted)', background: '#fff', borderRadius: '8px', border: '1px solid #e2e8f0' }}>
+              User addition is now handled via the public registration page.
+            </div>
           ) : activePage === 'schedule' ? (
             <GenericDataPanel title="Schedule" table="schedule_events" roleFilter={true} columns={[{key: 'title', label: 'Title', type: 'text'}, {key: 'event_date', label: 'Date', type: 'date'}, {key: 'event_time', label: 'Time', type: 'time'}, {key: 'description', label: 'Details', type: 'textarea'}]} />
           ) : activePage === 'goals' ? (
@@ -527,7 +601,7 @@ export default function ManagerDashboard() {
       <Modal open={detailOpen} onClose={() => setDetailOpen(false)} title={selectedIntern ? `👤 ${selectedIntern.name}` : 'Intern Profile'} maxWidth="520px"
         footer={
           <>
-            <button className="btn btn-danger btn-sm" onClick={removeIntern}>Remove Intern</button>
+            <button className="btn btn-danger btn-sm" onClick={() => handleDeactivateIntern(selectedIntern!.id)}>Deactivate Intern</button>
             <button className="btn btn-ghost" onClick={() => setDetailOpen(false)}>Close</button>
             <button className="btn btn-violet" onClick={() => { setDetailOpen(false); setMsgOpen(true) }}>💬 Message</button>
           </>

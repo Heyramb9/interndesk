@@ -154,6 +154,15 @@ CREATE INDEX IF NOT EXISTS idx_messages_receiver ON messages(receiver_id);
 CREATE INDEX IF NOT EXISTS idx_notifications_user ON notifications(user_id);
 CREATE INDEX IF NOT EXISTS idx_announcements_cohort ON announcements(cohort_id);
 
+CREATE TABLE IF NOT EXISTS past_interns (
+  id           INTEGER PRIMARY KEY AUTOINCREMENT,
+  first_name   VARCHAR(100) NOT NULL,
+  last_name    VARCHAR(100) NOT NULL,
+  email        VARCHAR(255) NOT NULL,
+  track        VARCHAR(100),
+  deactivated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
 INSERT OR IGNORE INTO users (id, first_name, last_name, email, password, role) VALUES
   (1, 'Alex',  'Johnson', 'intern@demo.com',  '$2b$10$W2gdqvgyDc4q7iG/RaVfqeB8ATVYWjfDetmez3V110YJT/IU7Hty.',  'intern'),
   (2, 'Sarah', 'Rodriguez', 'mentor@demo.com', '$2b$10$W2gdqvgyDc4q7iG/RaVfqeB8ATVYWjfDetmez3V110YJT/IU7Hty.', 'mentor'),
