@@ -169,6 +169,19 @@ export default function ManagerDashboard() {
     }
   }
 
+  // Messaging state
+  const [msgTo, setMsgTo] = useState('')
+  const [msgSubj, setMsgSubj] = useState('')
+  const [msgBody, setMsgBody] = useState('')
+
+  // Announcement state
+  const [annTitle, setAnnTitle] = useState('')
+  const [annBody, setAnnBody] = useState('')
+  const [annAudience, setAnnAudience] = useState('all')
+
+  const handleLogout = () => { logout(); navigate('/login') }
+  const today = new Date().toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })
+
 
 
 
